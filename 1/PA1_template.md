@@ -3,7 +3,7 @@ title: "PA1_template.Rmd"
 author: "BK"
 date: "Saturday, August 15, 2015"
 output: html_document
-keep_md: true
+keep_md: true 
 ---
 
 ##Assignment 1, Reproducible Research##
@@ -12,34 +12,7 @@ keep_md: true
 
 ```r
 library(dplyr)
-```
-
-```
-## Warning: package 'dplyr' was built under R version 3.1.3
-```
-
-```
-## 
-## Attaching package: 'dplyr'
-## 
-## The following object is masked from 'package:stats':
-## 
-##     filter
-## 
-## The following objects are masked from 'package:base':
-## 
-##     intersect, setdiff, setequal, union
-```
-
-```r
 library(lattice)
-```
-
-```
-## Warning: package 'lattice' was built under R version 3.1.3
-```
-
-```r
 activity <- read.csv("activity.csv")
 ```
 
