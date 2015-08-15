@@ -3,7 +3,7 @@ title: "PA1_template.Rmd"
 author: "BK"
 date: "Saturday, August 15, 2015"
 output: html_document
-keep_md: true 
+keep_md: true
 ---
 
 ##Assignment 1, Reproducible Research##
@@ -122,7 +122,7 @@ median(activity7$steps)
 
 
 ###Question 4: Are there differences in activity patterns between weekdays and weekends?###
-*Separating the data into weekday and weekend to observe differences in activity levels. The key difference is the higher level of activity through the day on weekdays and the big spike on weekend mornings.*
+*Separating the data into weekday and weekend to observe differences in activity levels. The key difference is the higher level of activity through the day on weekends and the big spike on weekday mornings.*
 ```{r, echo=TRUE}
 #Step 1: Determine the day of the week and add this information as a new column
 weekDay <- weekdays(as.Date(as.character(activity5$date)))

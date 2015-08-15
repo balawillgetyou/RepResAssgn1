@@ -328,7 +328,7 @@ mean(activity7$steps)
 </code></pre>
 
 <p>###Question 4: Are there differences in activity patterns between weekdays and weekends?###
-<em>Separating the data into weekday and weekend to observe differences in activity levels. The key difference is the higher level of activity through the day on weekdays and the big spike on weekend mornings.</em></p>
+<em>Separating the data into weekday and weekend to observe differences in activity levels. The key difference is the higher level of activity through the day on weekends and the big spike on weekday mornings.</em></p>
 
 <pre><code class="r">#Step 1: Determine the day of the week and add this information as a new column
 weekDay &lt;- weekdays(as.Date(as.character(activity5$date)))
