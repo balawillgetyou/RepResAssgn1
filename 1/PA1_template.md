@@ -1,19 +1,86 @@
+---
+title: "PA1_template.Rmd"
+author: "BK"
+date: "Saturday, August 15, 2015"
+output: html_document
+keep_md: true
+---
 
-#Setup
+##Assignment 1, Reproducible Research##
+
+###Loading data and required libraries:###
+
+```r
 library(dplyr)
-library(lattice)
-activity <- read.csv("activity.csv")
+```
 
-#Q1
+```
+## Warning: package 'dplyr' was built under R version 3.1.3
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following object is masked from 'package:stats':
+## 
+##     filter
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
+library(lattice)
+```
+
+```
+## Warning: package 'lattice' was built under R version 3.1.3
+```
+
+```r
+activity <- read.csv("activity.csv")
+```
+
+
+###Question 1: What is mean total number of steps taken per day?###
+*Finding the total number of steps/ day and plotting as a histogram*
+
+```r
 #grouping activity by date and then finding the sum of number of steps/ day
 daily <- group_by(activity, date)
 dailySteps <- summarize (daily, steps = sum(steps, na.rm = TRUE))
 #plotting and responding to the specific questions asked (histogram, mean and median)
 hist(dailySteps$steps, xlab="Number of steps", main = "Histogram of steps/day (with NA)")
-mean(dailySteps$steps)
-median(dailySteps$steps)
+```
 
-#Q2
+![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png) 
+
+
+*Finding the mean and median number of steps/ day*
+
+```r
+mean(dailySteps$steps)
+```
+
+```
+## [1] 9354.23
+```
+
+```r
+median(dailySteps$steps)
+```
+
+```
+## [1] 10395
+```
+
+
+###Question 2: What is the average daily activity pattern?###
+*Generating the time series plot of number of steps taken by time interval averaged across all days*
+
+```r
 #grouping activity by the 5 minute intervals each day is split into
 fiveMin <- group_by(activity, interval)
 #finding the average of number of steps/ interval (data within each interval is from 
@@ -23,15 +90,44 @@ fiveMinSteps <- summarize (fiveMin, steps = mean(steps, na.rm=TRUE))
 fiveMinSteps$intervalID <- seq(1:288)
 #plotting average number of steps against interval ID
 with(fiveMinSteps, plot(steps~intervalID, type = "l", ylab = "Number of steps", xlab = "Interval"))
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4-1.png) 
+
+
+
+*Identifying the interval id which has the max number of steps, averaged across all days*
+
+```r
 #identifying the interval id which has the max number of steps, averaged across all days
 maxAvg <- filter(fiveMinSteps, fiveMinSteps$steps == max(fiveMinSteps$steps))
 maxAvg[[3]]
+```
 
-#Q3
+```
+## [1] 104
+```
+
+
+
+###Question 3: Imputing missing values###
+*Total number of rows with NAs*
+
+```r
 #Part 1
 #Total number of rows with NAs
 table(complete.cases(activity))[[1]]
+```
 
+```
+## [1] 2304
+```
+
+
+
+*Imputing interval mean values where there are NAs*
+
+```r
 #Part 2
 #Step 1: Create a vector of mean steps/ interval and repeat it for each of the 61 days
 #for which data has been captured.
@@ -48,20 +144,60 @@ activity3 <- subset(activity2, is.na(activity2$steps))
 activity4 <- subset(activity2, !is.na(activity2$steps))
 #Step4
 activity3$steps <- activity3$meanSteps
+```
 
+
+
+*Creating a new dataset equal to the original dataset but with missing data filled in*
+
+```r
 #Part 3
 #Merge the data frame originally with out NA and the one in which values are imputed
 activity5 <- rbind(activity3, activity4)
+```
 
+
+
+
+*Plotting a histogram*
+
+```r
 #Part 4
 #Group by date, sum steps by date, plot histogram and find mean & median
 activity6 <- group_by(activity5, date)
 activity7 <- summarize (activity6, steps = sum(steps))
 hist(activity7$steps, xlab="Number of steps", main = "Histogram of steps/day with imputed values")
-mean(activity7$steps)
-median(activity7$steps)
+```
 
-#Q4
+![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+
+
+*Calculating the mean and median with imputed values. As seen, there is a significant difference between the raw data and imputing values. The Mean and Median are not only higher now, the Mean is also equal to the Median.*
+
+```r
+#Part 4
+#Group by date, sum steps by date, plot histogram and find mean & median
+mean(activity7$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+```r
+median(activity7$steps)
+```
+
+```
+## [1] 10766.19
+```
+
+
+
+###Question 4: Are there differences in activity patterns between weekdays and weekends?###
+*Separating the data into weekday and weekend to observe differences in activity levels. The key difference is the higher level of activity through the day on weekdays and the big spike on weekend mornings.*
+
+```r
 #Step 1: Determine the day of the week and add this information as a new column
 weekDay <- weekdays(as.Date(as.character(activity5$date)))
 activity8 <- cbind(activity5, weekDay)
@@ -84,11 +220,7 @@ activity14$Day <- as.factor(rep("Weekday", 288))
 #Step 6: Combine the weekday and weekend data and plot it using the lattice plotting system
 activity15 <- rbind(activity11, activity14)
 xyplot(steps~intervalID | Day, data = activity15, layout =c(1,2), type = "l", ylab = "Number of steps", xlab = "Interval")
+```
 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11-1.png) 
 
-install.packages("markdown")
-library(markdown)
-knit2html
-install.packages("knitr")
-library(knitr)
-knit2html("PA1_template.Rmd")
