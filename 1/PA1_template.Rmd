@@ -3,7 +3,7 @@ title: "PA1_template.Rmd"
 author: "BK"
 date: "Saturday, August 15, 2015"
 output: html_document
-keep_md: true 
+keep_md: true
 ---
 
 ##Assignment 1, Reproducible Research##
